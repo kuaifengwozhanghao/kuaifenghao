@@ -436,13 +436,13 @@ let mut current_width = 0.0;
 for c in text.chars() {
     let char_str = c.to_string();
     let jchar_str = env.new_string(&char_str).unwrap();
-    let jchar_obj: JObject = jchar_str.into(); // ✅ 正确转换成 JObject
+    let jchar_obj: JObject = JObject::from(jchar_str); // ✅ 显式转换
 
     let char_width = env.call_method_unchecked(
         &paint,
         measure_text_method,
         jni::signature::ReturnType::Primitive(jni::signature::Primitive::Float),
-        &[JValue::Object(jchar_obj.clone())], // ✅ 传入 JObject，不要引用
+        &[JValue::Object(jchar_obj)], // ✅ 传递 JObject
     ).unwrap().f().unwrap();
 
     if current_width + char_width > max_width {
@@ -454,6 +454,7 @@ for c in text.chars() {
     current_line.push(c);
     current_width += char_width;
 }
+
 
 
 if !current_line.is_empty() {
