@@ -395,20 +395,16 @@ let text = env
     .expect("Failed to set AntiAlias on Paint");
 
 // 获取 Paint.measureText 方法
-let measure_text_method = env.get_method_id(
-    env.get_object_class(&paint).unwrap(),
-    "measureText",
-    "(Ljava/lang/String;)F",
-).unwrap();
-	
-// 测量字符宽度
-let jtext = env.new_string("中").unwrap(); // 你要测量的字符
-	
+let measure_text_method = "measureText"; // 传方法名字符串
+let jtext = env.new_string("中").unwrap(); 
+let jtext_obj = JObject::from(jtext); // 转换成 JObject
+
 let char_width = env
     .call_method(
         &paint,
-        measure_text_method,
-        &[JValue::Object(jtext.into())], // 传入 JString
+        measure_text_method, // 方法名字符串
+        "(Ljava/lang/String;)F", // 方法签名
+        &[JValue::Object(jtext_obj.into_inner())], // 传入 jobject
     )
     .unwrap()
     .f()
