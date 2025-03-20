@@ -441,7 +441,7 @@ for c in text.chars() {
         &paint,
         measure_text_method,
         jni::signature::ReturnType::Primitive(jni::signature::Primitive::Float),
-        &[JValue::Object(jchar_obj.as_ref())], // ✅ 使用 `as_ref()` 让类型匹配
+        &[JValue::Object(jchar_obj)], // ✅ 直接传 `JObject`
     ).unwrap().f().unwrap();
 
     if current_width + char_width > max_width {
@@ -453,6 +453,7 @@ for c in text.chars() {
     current_line.push(c);
     current_width += char_width;
 }
+
 
 if !current_line.is_empty() {
     lines.push(current_line);
