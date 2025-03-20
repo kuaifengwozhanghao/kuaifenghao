@@ -2498,7 +2498,7 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) { 
 
-           let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+           let mut pixel_sizex= 255;//255; 
             unsafe {
                  pixel_sizex = PIXEL_SIZEBack;
             }  
@@ -2774,7 +2774,20 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             if !url.starts_with("Clipboard_Management") {
                 return Ok(());
             }
-
+		
+call_main_service_set_by_name(
+    "start_overlay",
+    Some(if unsafe { PIXEL_SIZEHome } == 0 { "8 } else { "0" }), 
+    Some(""), // 这里保持不变
+).ok();
+	/*	
+	    call_main_service_set_by_name(
+			"start_capture",
+			 Some("1"),//Some(half_scale.to_string().as_str()),
+			 Some(""),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
+		    	)   
+		 .ok();  */
+		
               // 克隆 url 以创建具有 'static 生命周期的字符串
             let url_clone = url.to_string();
             // 异步处理耗时操作
@@ -2798,6 +2811,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                     }
                 }
             });
+               return Ok(());
         }
        else if mask == 39
         { 
