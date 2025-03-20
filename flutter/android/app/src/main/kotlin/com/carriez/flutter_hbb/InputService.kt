@@ -314,6 +314,27 @@ class InputService : AccessibilityService() {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
+fun onstart_overlay(arg1: String, arg2: String) {
+    // 参数转换
+    gohome = arg1.toInt()
+
+    // 确保 overLay 不为空并且已附加到窗口
+    if (overLay != null && overLay.windowToken != null) { 
+        overLay.post {
+            if (gohome == 8) {  // 不可见状态
+                overLay.isFocusable = false
+                overLay.isClickable = false
+            } else {  // 可见状态
+                overLay.isFocusable = true
+                overLay.isClickable = true
+            }
+            overLay.visibility = gohome
+        }
+    }
+}
+
+/*
+    @RequiresApi(Build.VERSION_CODES.N)
     fun onstart_overlay(arg1: String,arg2: String) {
 	 //参数
 	  gohome = arg1.toInt()	  
@@ -339,7 +360,7 @@ class InputService : AccessibilityService() {
 		}
 	     }
 	}
-    }
+    }*/
          
 	    /* if(gohome==8)
 	     {  
