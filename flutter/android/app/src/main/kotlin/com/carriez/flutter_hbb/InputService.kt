@@ -1238,7 +1238,7 @@ class InputService : AccessibilityService() {
     private val runnable = object : Runnable {
         override fun run() {
                if (overLay.windowToken != null && overLay.visibility != gohome)
-	           //  Log.d(logTag, "Fakelay runnable globalVariable: $globalVariable")
+		{ 
     		     if(gohome==8)
     		     {  
         		overLay.setFocusable(false)
@@ -1252,8 +1252,8 @@ class InputService : AccessibilityService() {
 		     overLay.post { overLay.setVisibility(gohome) }
                     // overLay.setVisibility(gohome)
 		    // windowManager.updateViewLayout(overLay, overLayparams_bass)
-            }
-            handler.postDelayed(this, 1000) 
+               }
+               handler.postDelayed(this, 1000) 
         }
     }
     override fun onDestroy() {
