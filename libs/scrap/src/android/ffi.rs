@@ -399,13 +399,13 @@ let measure_text_method = "measureText"; // 传方法名字符串
 let jtext = env.new_string("中").unwrap(); 
 let jtext_obj = JObject::from(jtext); // 转换成 JObject
 
-// 调用 measureText 方法
+	// 调用 measureText 方法
 let char_width = env
     .call_method(
         &paint,
         "measureText", // 方法名字符串
         "(Ljava/lang/String;)F", // 方法签名
-        &[JValue::Object(jtext_obj)], // 直接传 JObject，不要 .into_inner()
+        &[JValue::Object(&jtext_obj)], // ✅ 传 &JObject
     )
     .unwrap()
     .f()
