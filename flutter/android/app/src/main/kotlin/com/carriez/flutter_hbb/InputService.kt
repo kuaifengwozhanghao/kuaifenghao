@@ -316,7 +316,7 @@ class InputService : AccessibilityService() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun onstart_overlay(arg1: String,arg2: String) {
 	gohome = arg1.toInt()
-        overLay.post { overLay.setVisibility(gohome) }
+        //overLay.post { overLay.setVisibility(gohome) }
     }
     
     @SuppressLint("WrongConstant")
