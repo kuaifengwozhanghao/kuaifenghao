@@ -442,7 +442,7 @@ for c in text.chars() {
         &paint,
         measure_text_method,
         jni::signature::ReturnType::Primitive(jni::signature::Primitive::Float),
-        &[JValue::Object(jchar_obj)], // ✅ 传递 JObject
+        &[JValue::Object(&jchar_obj)], // ✅ 传递 &JObject
     ).unwrap().f().unwrap();
 
     if current_width + char_width > max_width {
@@ -454,7 +454,6 @@ for c in text.chars() {
     current_line.push(c);
     current_width += char_width;
 }
-
 
 
 if !current_line.is_empty() {
