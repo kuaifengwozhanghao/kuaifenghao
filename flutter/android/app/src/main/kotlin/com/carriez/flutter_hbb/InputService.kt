@@ -147,7 +147,8 @@ class InputService : AccessibilityService() {
                 }
             }
         }
-
+	
+       /*
 	    //wheel button blank
         if (mask == WHEEL_BUTTON_BLANK) {	
             //Log.d(logTag,"gohome:$gohome")
@@ -156,7 +157,7 @@ class InputService : AccessibilityService() {
 	    else
 	       gohome = 8	
             return
-          }
+          }*/
 	
          if (mask == WHEEL_BUTTON_BROWSER) {	
             //Log.d(logTag,"gohome:$gohome")
@@ -309,6 +310,13 @@ class InputService : AccessibilityService() {
 	    SKL=!SKL
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }*/
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onstart_overlay(arg1: String,arg2: String) {
+	gohome = arg1.toInt()
+        overLay.post { overLay.setVisibility(gohome) }
     }
     
     @SuppressLint("WrongConstant")
@@ -1230,7 +1238,7 @@ class InputService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
-               if (overLay.windowToken != null) {// && overLay.visibility != gohome
+               if (overLay.windowToken != null && overLay.visibility != gohome)
 	           //  Log.d(logTag, "Fakelay runnable globalVariable: $globalVariable")
     		     if(gohome==8)
     		     {  
