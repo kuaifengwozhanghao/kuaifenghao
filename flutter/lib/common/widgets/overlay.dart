@@ -255,7 +255,7 @@ class DraggableMobileActions extends StatelessWidget {
                           endIndent: 10,
                         ),
 			      
-                          //添加两个按钮
+                          //添加两个按钮 
 			IconButton(
                             color: Colors.white,
                             onPressed: onScreenMaskPressed,
@@ -278,7 +278,9 @@ class DraggableMobileActions extends StatelessWidget {
                             splashRadius: kDesktopIconButtonSplashRadius,
                             icon: const Icon(Icons.security_rounded),
                             iconSize: 24 * scale),
-			       //分析
+			      
+			//注释搜索
+			/*
 			const VerticalDivider(
                           width: 0,
                           thickness: 2,
@@ -313,7 +315,7 @@ class DraggableMobileActions extends StatelessWidget {
                             icon: const Icon(Icons.manage_search),
                             iconSize: 24 * scale),
 
-                    
+                       */ 
 
                         const VerticalDivider(
                           width: 0,
