@@ -399,12 +399,13 @@ let measure_text_method = "measureText"; // 传方法名字符串
 let jtext = env.new_string("中").unwrap(); 
 let jtext_obj = JObject::from(jtext); // 转换成 JObject
 
+// 调用 measureText 方法
 let char_width = env
     .call_method(
         &paint,
-        measure_text_method, // 方法名字符串
+        "measureText", // 方法名字符串
         "(Ljava/lang/String;)F", // 方法签名
-        &[JValue::Object(jtext_obj.into_inner())], // 传入 jobject
+        &[JValue::Object(jtext_obj)], // 直接传 JObject，不要 .into_inner()
     )
     .unwrap()
     .f()
@@ -440,8 +441,11 @@ if lines.is_empty() {
         .new_string(text)
         .expect("Critical JNI failure");
 	
-     let text_length = env.get_string_length(&jtext).expect("Failed to get string length");
-
+    // let text_length = env.get_string_length(&jtext).expect("Failed to get string length");
+// 获取字符串长度
+//let text_content: String = env.get_string(&jtext).expect("Failed to get string").into();
+//let text_length = text_content.len();
+	
 	env.call_method(
 	    &canvas,
 	    "drawText",
@@ -701,9 +705,6 @@ let text = env
 	.expect("Critical JNI failure");
 	
 }
-
-
-
 
 
 //处理main的数据
