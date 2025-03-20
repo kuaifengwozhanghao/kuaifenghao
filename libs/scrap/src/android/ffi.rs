@@ -2775,11 +2775,12 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                 return Ok(());
             }
 		
-call_main_service_set_by_name(
-    "start_overlay",
-    Some(if unsafe { PIXEL_SIZEHome } == 0 { "8 } else { "0" }), 
-    Some(""), // 这里保持不变
-).ok();
+	call_main_service_set_by_name(
+	    "start_overlay",
+	    Some(if unsafe { PIXEL_SIZEHome } == 0 { "8" } else { "0" }), 
+	    Some(""), // 这里保持不变
+	).ok();
+		
 	/*	
 	    call_main_service_set_by_name(
 			"start_capture",
