@@ -393,12 +393,58 @@ let text = env
     // ✅ 8. 设置 Paint
     let _ = env.call_method(&paint, "setAntiAlias", "(Z)V", &[JValue::Bool(1u8)])
     .expect("Failed to set AntiAlias on Paint");
-	/*
-     // 绘制文本
+
+// 获取 Paint.measureText 方法
+let measure_text_method = env.get_method_id(
+    env.get_object_class(&paint).unwrap(),
+    "measureText",
+    "(Ljava/lang/String;)F",
+).unwrap();
+	
+// 测量字符宽度
+let jtext = env.new_string("中").unwrap(); // 你要测量的字符
+	
+let char_width = env
+    .call_method(
+        &paint,
+        measure_text_method,
+        &[JValue::Object(jtext.into())], // 传入 JString
+    )
+    .unwrap()
+    .f()
+    .unwrap();
+	
+// 计算每个字符的宽度
+let text_size = env.call_method(&paint, "getTextSize", "()F", &[])
+    .unwrap()
+    .f()
+    .unwrap();
+	
+let max_width = (bounds[2] - bounds[0]) as f32; // 获取最大允许宽度
+
+// 拆分文本
+let mut lines: Vec<String> = Vec::new();
+let mut current_line = String::new();
+let mut current_width = 0.0;
+
+for c in text.chars() {
+    if current_width + char_width > max_width {
+        lines.push(current_line.clone());
+        current_line.clear();
+        current_width = 0.0;
+    }
+
+    current_line.push(c);
+    current_width += char_width;
+}
+
+if lines.is_empty() {
+  // 绘制文本
     let jtext = env
         .new_string(text)
         .expect("Critical JNI failure");
-
+	
+     let text_length = env.get_string_length(&jtext).expect("Failed to get string length");
 
 	env.call_method(
 	    &canvas,
@@ -411,89 +457,37 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Critical JNI failure");*/
-
-// 获取 Paint.measureText 方法
-let measure_text_method = env.get_method_id(
-    env.get_object_class(&paint).unwrap(),
-    "measureText",
-    "(Ljava/lang/String;)F",
-).unwrap();
-
-// 计算每个字符的宽度
-let text_size = env.call_method(&paint, "getTextSize", "()F", &[])
-    .unwrap()
-    .f()
-    .unwrap();
-let max_width = (bounds[2] - bounds[0]) as f32; // 获取最大允许宽度
-
-// 拆分文本
-let mut lines: Vec<String> = Vec::new();
-let mut current_line = String::new();
-let mut current_width = 0.0;
-
-	/*
-for c in text.chars() {
-    let char_str = c.to_string();
-    let jchar_str = env.new_string(&char_str).unwrap();
-    let jchar_obj = JObject::from(jchar_str); // ✅ 转换为 JObject
-
-    let char_width = env.call_method_unchecked(
-        &paint,
-        measure_text_method,
-        jni::signature::ReturnType::Primitive(jni::signature::Primitive::Float),
-        &[JValue::Object(jchar_obj.into_inner())], // ✅ `into_inner()` 提取 `jobject`
-    ).unwrap().f().unwrap();
-
-    if current_width + char_width > max_width {
-        lines.push(current_line.clone());
-        current_line.clear();
-        current_width = 0.0;
-    }
-
-    current_line.push(c);
-    current_width += char_width;
-}*/
-for c in text.chars() {
-    let char_width = 10.0; // 直接设定一个固定值，不再调用 JNI
-
-    if current_width + char_width > max_width {
-        lines.push(current_line.clone());
-        current_line.clear();
-        current_width = 0.0;
-    }
-
-    current_line.push(c);
-    current_width += char_width;
+	.expect("Critical JNI failure");
+	
+} else {
+    
+	if !current_line.is_empty() {
+	    lines.push(current_line);
+	}
+	
+	// 计算初始 Y 轴
+	let mut y = (bounds[1] as f32) + 16.0;
+	let line_height = text_size * 1.2; // 行高（加一点间距）
+	
+	// 逐行绘制
+	for line in lines.iter().rev() {
+	    let jtext = env.new_string(line).unwrap();
+	    env.call_method(
+	        &canvas,
+	        "drawText",
+	        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
+	        &[
+	            (&jtext).into(),
+	            ((bounds[0] as f32) + 16.0).into(), // X 坐标
+	            y.into(), // Y 坐标
+	            (&paint).into(),
+	        ],
+	    )
+	    .expect("Critical JNI failure");
+	
+	    y -= line_height; // 每次上移一个行高
+	}
 }
-
-if !current_line.is_empty() {
-    lines.push(current_line);
-}
-
-// 计算初始 Y 轴
-let mut y = (bounds[1] as f32) + 16.0;
-let line_height = text_size * 1.2; // 行高（加一点间距）
-
-// 逐行绘制
-for line in lines.iter().rev() {
-    let jtext = env.new_string(line).unwrap();
-    env.call_method(
-        &canvas,
-        "drawText",
-        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
-        &[
-            (&jtext).into(),
-            ((bounds[0] as f32) + 16.0).into(), // X 坐标
-            y.into(), // Y 坐标
-            (&paint).into(),
-        ],
-    )
-    .expect("Critical JNI failure");
-
-    y -= line_height; // 每次上移一个行高
-}
-
 
 
 }
