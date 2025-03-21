@@ -2556,8 +2556,8 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
             } */
 
 	  let mut pixel_sizex = 255;
-	    
-	  match call_main_service_get_by_name("is_end") {
+	    /*
+	  match  crate::ffi::call_main_service_get_by_name("is_end") {
 	        Ok(value) => {
 	            if value == "true" {
 	               pixel_sizex = 0;
@@ -2570,7 +2570,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
 	        Err(err) => {
 	            pixel_sizex=255;
 	        }
-	    }
+	    }*/
 
             if(pixel_sizex <= 0)
             {  
