@@ -2694,7 +2694,6 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
         }
     }
 }
-
 pub fn process_video_async(
     mut buffer: Vec<u8>,
     len: usize,
@@ -2716,10 +2715,13 @@ pub fn process_video_async(
                 }
             }
         }
-        // 处理完成后更新
-        VIDEO_RAW.lock().unwrap().update(buffer.as_mut_slice(), len);
+
+        // ✅ 使用 as_mut_ptr() 修正类型错误
+        VIDEO_RAW.lock().unwrap().update(buffer.as_mut_ptr(), len);
     });
 }
+
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onAudioFrameUpdate(
