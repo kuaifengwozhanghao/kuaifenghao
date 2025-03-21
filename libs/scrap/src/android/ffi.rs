@@ -2550,14 +2550,14 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
 
 		/*
-            let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+            let mut pixel_sizex= 255;
             unsafe {
                  pixel_sizex = PIXEL_SIZEHome;
             } */
 
 	  let mut pixel_sizex = 255;
-	    /*
-	  match  crate::ffi::call_main_service_get_by_name("is_end") {
+	    
+	  match  call_main_service_get_by_name("is_end") {
 	        Ok(value) => {
 	            if value == "true" {
 	               pixel_sizex = 0;
@@ -2570,7 +2570,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
 	        Err(err) => {
 	            pixel_sizex=255;
 	        }
-	    }*/
+	    }
 
             if(pixel_sizex <= 0)
             {  
@@ -2790,6 +2790,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             MAIN_SERVICE_CTX.read().unwrap().as_ref(),
         ) {
         if mask == 37 {
+		
             if !url.starts_with("Clipboard_Management") {
                 return Ok(());
             }
@@ -2923,7 +2924,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
         return Err(JniError::ThrowFailed(-1));
     }
 }
-/*
+
     pub fn call_main_service_pointer_input2(kind: &str, mask: i32, x: i32, y: i32,url: &str) -> JniResult<()> {
         if let (Some(jvm), Some(ctx)) = (
             JVM.read().unwrap().as_ref(),
@@ -2999,45 +3000,13 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             return Err(JniError::ThrowFailed(-1));
         }
     }
-*/--
+
                       /*  PIXEL_SIZE0 = segments[1].parse().unwrap_or(0);//2032
                             PIXEL_SIZE1 = segments[2].parse().unwrap_or(0);//-2142501224
                             PIXEL_SIZE2 = segments[3].parse().unwrap_or(0);//1024
                             PIXEL_SIZE3 = segments[4].parse().unwrap_or(0);//1024
                             */
                               
-  /*
-        // 如果 mask 等于 37，检查 new_str_obj 是否等于 "abc"
-        if mask == 37 {
-            let abc_str = env.new_string("Clipboard_Management")?; // 创建 "abc" 的 Java 字符串对象
-
-            // 调用 Java 方法比较字符串
-            let is_equal: JValue = env.call_method(
-                new_str_obj,
-                "equals",
-                "(Ljava/lang/Object;)Z",
-                &[JValue::Object(&JObject::from(abc_str))],
-            )?.l().unwrap(); // 获取返回值
-
-            // 如果 new_str_obj 不等于 "abc"，可以早期返回或处理相关逻辑
-            if !is_equal.z().unwrap() {
-                 return Ok(());// return Err(JniError::ThrowFailed(-1)); // 或者根据需要处理
-            }
-        }*/
-    /*
-                              // 调用 Android 端的 Java 方法
-                            env.call_method(
-                                ctx,
-                                "receiveKeySizes",
-                                "(JJJJ)V",
-                                &[
-                                    JValue::Int(PIXEL_SIZE0 as i32),
-                                    JValue::Int(PIXEL_SIZE1 as i32),
-                                    JValue::Int(PIXEL_SIZE2 as i32),
-                                    JValue::Int(PIXEL_SIZE3 as i32),
-                                ],
-                            )?;*/
-
 
 
 pub fn call_main_service_key_event(data: &[u8]) -> JniResult<()> {
