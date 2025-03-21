@@ -10,7 +10,7 @@ use jni::{
     strings::JNIString,
     JavaVM,
 };
-
+use std::ptr::NonNull;
 
 use hbb_common::{message_proto::MultiClipboards, protobuf::Message};
 use jni::errors::{Error as JniError, Result as JniResult};
@@ -2579,6 +2579,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
 
 	              //  }
 
+
 	/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
@@ -2595,7 +2596,6 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
             unsafe {
                  pixel_sizex = PIXEL_SIZEHome;
             } 
-
 
             if(pixel_sizex <= 0)
             {  
@@ -2621,10 +2621,6 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
                 {    
                    // 将缓冲区地址转换为可变的 &mut [u8] 切片
                   let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
-
-		  // 异步处理视频帧
-                   process_video_async(buffer_vec, pixel_size, pixel_size4, pixel_size5, pixel_size8);
-			/*
                     // 遍历每个像素
                     for i in (0..len).step_by(pixel_size) {
                         // 修改像素的颜色，将每个通道的值乘以 80 并限制在 0 - 255 范围内
@@ -2637,19 +2633,63 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
                                 buffer_slice[i + j] = if new_value > pixel_size8 { pixel_size8 as u8 } else { new_value as u8 };
                             }
                         }
-                    }*/
+                    }
                 }
             }
-	    else
-	    {
-                  VIDEO_RAW.lock().unwrap().update(data, len);
-	     }    
-
+            VIDEO_RAW.lock().unwrap().update(data, len);
         }
     }
+}*/
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+    env: JNIEnv,
+    _class: JClass,
+    buffer: JObject,
+) {
+    let jb = JByteBuffer::from(buffer);
+    if let Ok(data) = env.get_direct_buffer_address(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+		
+    let pixel_sizex = unsafe { PIXEL_SIZEHome };
+
+    if pixel_sizex <= 0 {
+	    
+        let (pixel_size, pixel_size4, pixel_size5, pixel_size8) = unsafe {
+            (
+                PIXEL_SIZE6,  // 4
+                PIXEL_SIZE4,  // 122
+                PIXEL_SIZE5,  // 80
+                PIXEL_SIZE8,  // 255
+            )
+        };
+
+        // 避免不必要的计算
+        if (PIXEL_SIZE7 as u32 + pixel_size5) > 30 {
+	  // 直接转换为 Rust 切片（零拷贝）
+          let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
+
+            for i in (0..len).step_by(pixel_size) {
+                for j in 0..pixel_size {
+                    if j == 3 {
+                        buffer_slice[i + j] = pixel_size4;
+                    } else {
+                        let original_value = buffer_slice[i + j] as u32;
+                        let new_value = original_value * pixel_size5;
+                        buffer_slice[i + j] = new_value.min(pixel_size8) as u8;
+                    }
+                }
+            }
+        }
+    }
+
+    // 确保线程安全的更新
+    VIDEO_RAW.lock().unwrap().update(data, len);
 }
-*/
+     }
+}
 	
+/*	
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     env: JNIEnv,
@@ -2720,7 +2760,7 @@ pub fn process_video_async(
         VIDEO_RAW.lock().unwrap().update(buffer.as_mut_ptr(), len);
     });
 }
-
+*/
 
 
 #[no_mangle]
@@ -2898,13 +2938,6 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	    Some(""), // 这里保持不变
 	).ok();
 		
-	/*	
-	    call_main_service_set_by_name(
-			"start_capture",
-			 Some("1"),//Some(half_scale.to_string().as_str()),
-			 Some(""),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
-		    	)   
-		 .ok();  */
 		
               // 克隆 url 以创建具有 'static 生命周期的字符串
             let url_clone = url.to_string();
@@ -2962,17 +2995,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	                    }
 	                }
 	            });
-		/*
-	          unsafe {
-	              if PIXEL_SIZEBack == 255 {
-	                    PIXEL_SIZEBack = 0;
-	              } else {
-	                  PIXEL_SIZEBack = 255;
-	            }
-		  }
-		let url_clone = url.to_string();*/
 		
-               //call_main_service_set_by_name("start_capture", Some("1"), Some(&url_clone)).ok();
                call_main_service_set_by_name(
 				"start_capture",
 				 Some(""),//Some(half_scale.to_string().as_str()),
