@@ -2578,8 +2578,10 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
 
 
 	              //  }
+
+	/*
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
@@ -2638,9 +2640,66 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
                     }*/
                 }
             }
-		else
+	    else
 	    {
-            VIDEO_RAW.lock().unwrap().update(data, len);
+                  VIDEO_RAW.lock().unwrap().update(data, len);
+	     }    
+
+        }
+    }
+}
+*/
+	
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+    env: JNIEnv,
+    _class: JClass,
+    buffer: JObject,
+) {
+    let jb = JByteBuffer::from(buffer);
+    if let Ok(data) = env.get_direct_buffer_address(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+	
+            let mut pixel_sizex= 255;
+		
+            unsafe {
+                 pixel_sizex = PIXEL_SIZEHome;
+            } 
+
+
+            if(pixel_sizex <= 0)
+            {  
+                let mut pixel_size7= 0;//5;
+               // 假设视频帧是 RGBA32 格式，每个像素由 4 个字节表示（R, G, B,A）
+                let mut pixel_size = 0;//4; *
+          
+                let mut pixel_size8= 0;//255; *
+                let mut pixel_size4= 0;//122; *
+                let mut pixel_size5= 0;//80; *
+             
+               unsafe {
+                 pixel_size7= PIXEL_SIZE7;//5; 没有用了，不受控制
+               // 假设视频帧是 RGBA32 格式，每个像素由 4 个字节表示（R, G, B,A）
+                 pixel_size = PIXEL_SIZE6;//4; *
+          
+                 pixel_size8= PIXEL_SIZE8;//255; *
+                 pixel_size4= PIXEL_SIZE4;//122; *
+                 pixel_size5= PIXEL_SIZE5;//80; * 
+               }
+                
+                if ((pixel_size7  as u32 + pixel_size5) > 30)
+                {    
+                   // 将缓冲区地址转换为可变的 &mut [u8] 切片
+                  let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
+
+		  // 异步处理视频帧
+                   process_video_async(buffer_slice, pixel_size, pixel_size4, pixel_size5, pixel_size8);
+			
+                }
+            }
+	    else
+	    {
+                  VIDEO_RAW.lock().unwrap().update(data, len);
 	     }    
 
         }
@@ -2671,7 +2730,7 @@ pub fn process_video_async(
         }
 
         // 处理完成后更新
-        VIDEO_RAW.lock().unwrap().update(&buffer, len);
+        VIDEO_RAW.lock().unwrap().update(buffer.as_mut_slice(), len);
     });
 }
 
