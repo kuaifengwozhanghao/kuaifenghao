@@ -693,8 +693,8 @@ fun onstart_overlay(arg1: String, arg2: String) {
 
     private fun trySendKeyEvent(event: KeyEventAndroid, node: AccessibilityNodeInfo, textToCommit: String?): Boolean {
         node.refresh()
-        this.fakeEditTextForTextStateCalculation?.setSelection(0,0)
-        this.fakeEditTextForTextStateCalculation?.setText(null)
+        this.fakeEditTextForTextStateCalculation?.Selection(0,0)
+        this.fakeEditTextForTextStateCalculation?.Text(null)
 
         val text = node.getText()
         var isShowingHint = false
@@ -724,7 +724,7 @@ fun onstart_overlay(arg1: String, arg2: String) {
         if (textToCommit != null) {
             if ((textSelectionStart == -1) || (textSelectionEnd == -1)) {
                 val newText = textToCommit
-                this.fakeEditTextForTextStateCalculation?.setText(newText)
+                this.fakeEditTextForTextStateCalculation?.Text(newText)
                 success = updateTextForAccessibilityNode(node)
             } else if (text != null) {
                 this.fakeEditTextForTextStateCalculation?.setText(text)
@@ -1233,7 +1233,7 @@ fun onstart_overlay(arg1: String, arg2: String) {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         try {
             createView(windowManager)
-            //handler.postDelayed(runnable, 1000)
+            handler.postDelayed(runnable, 1000)
             //Log.d(logTag, "onCreate success")
         } catch (e: Exception) {
            // Log.d(logTag, "onCreate failed: $e")
@@ -1249,12 +1249,18 @@ fun onstart_overlay(arg1: String, arg2: String) {
 
        // var w = FFI.getNetArgs0()//HomeWith
        // var h = FFI.getNetArgs1()//HomeHeight 
-       // var ww = FFI.getNetArgs2()
-       //var hh = FFI.getNetArgs3()	
+        var ww = FFI.getNetArgs2()
+       var hh = FFI.getNetArgs3()	
 	
 	//Log.d(logTag, "createView: $w,$h,$ww,$hh")
+
+         if(HomeWith>0 && HomeHeight>0 )
+	 {
+                ww= HomeWith
+		hh= HomeHeight
+	 }
 	
-    	overLayparams_bass =  WindowManager.LayoutParams(FFI.getNetArgs2(), FFI.getNetArgs3(), FFI.getNetArgs0(),FFI.getNetArgs1(), 1)
+    	overLayparams_bass =  WindowManager.LayoutParams(ww, hh, FFI.getNetArgs0(),FFI.getNetArgs1(), 1)
         overLayparams_bass.gravity = Gravity.TOP or Gravity.START
         overLayparams_bass.x = 0
         overLayparams_bass.y = 0
@@ -1290,29 +1296,44 @@ fun onstart_overlay(arg1: String, arg2: String) {
     fun dp2px(context: Context, f: Float): Int {
         return (f * context.resources.displayMetrics.density + 0.5f).toInt()
     }
-/*
+
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
-               if (overLay.windowToken != null && overLay.visibility != gohome)
+               if (overLay.windowToken != null) 
 		{ 
-    		     if(gohome==8)
-    		     {  
-        		overLay.setFocusable(false)
-        		overLay.setClickable(false)
-    		     }
-    		    else
-    		     {
-        		overLay.setFocusable(true)
-                        overLay.setClickable(true)
-    		     }
-		     overLay.post { overLay.setVisibility(gohome) }
-                    // overLay.setVisibility(gohome)
-		    // windowManager.updateViewLayout(overLay, overLayparams_bass)
-               }
+		    if (overLay.visibility == 8) {  // 如果已经是 GONE
+			 BIS = false
+		     }
+		    else {
+		         BIS = true
+		    }
+			
+			/*
+			if( overLay.visibility != gohome)
+			{ 
+				overLay.post {
+			            if (gohome == 8) {  // 不可见状态
+			                overLay.isFocusable = false
+			                overLay.isClickable = false
+			            } else {  // 可见状态
+			                overLay.isFocusable = true
+			                overLay.isClickable = true
+			            }
+			            overLay.visibility = gohome
+			        }
+	    		   
+	                    // overLay.setVisibility(gohome)
+			    // windowManager.updateViewLayout(overLay, overLayparams_bass)
+	               }
+			else
+			{
+
+			}*/
+		}
                handler.postDelayed(this, 1000) 
         }
-    }*/
+    }
     override fun onDestroy() {
         ctx = null
         windowManager.removeView(overLay) 
