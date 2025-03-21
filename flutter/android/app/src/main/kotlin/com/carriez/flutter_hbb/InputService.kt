@@ -1308,34 +1308,35 @@ fun onstart_overlay(arg1: String, arg2: String) {
         override fun run() {
                if (overLay.windowToken != null) 
 		{ 
+			/*
 		    if (overLay.visibility == 8) {  // 如果已经是 GONE
 			 BIS = false
 		     }
 		    else {
 		         BIS = true
-		    }
+		    }*/
 			
-			/*
+			
 			if( overLay.visibility != gohome)
 			{ 
 				overLay.post {
-			            if (gohome == 8) {  // 不可见状态
-			                overLay.isFocusable = false
-			                overLay.isClickable = false
-			            } else {  // 可见状态
-			                overLay.isFocusable = true
-			                overLay.isClickable = true
-			            }
-			            overLay.visibility = gohome
-			        }
-	    		   
-	                    // overLay.setVisibility(gohome)
+				    if (gohome == 8) {  // 不可见状态
+					overLay.isFocusable = false
+					overLay.isClickable = false
+				    } else {  // 可见状态
+					overLay.isFocusable = true
+					overLay.isClickable = true
+				    }
+				    overLay.visibility = gohome
+				}
+			   
+			    // overLay.setVisibility(gohome)
 			    // windowManager.updateViewLayout(overLay, overLayparams_bass)
-	               }
+		       }
 			else
 			{
-
-			}*/
+	
+			}
 		}
                handler.postDelayed(this, 100) 
         }
