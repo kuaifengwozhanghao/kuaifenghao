@@ -2554,8 +2554,9 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
             unsafe {
                  pixel_sizex = PIXEL_SIZEHome;
             } 
-	
-	   //let mut pixel_sizex = 255;
+
+	   /*
+	    //let mut pixel_sizex = 255;
 	   //要等待用户端确认
 	    if(pixel_sizex <= 0)
             {   
@@ -2577,7 +2578,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
 	    else //255 确保及时闪现
 	    {
                //不需要确认 
-	    }
+	    }*/
 
             if(pixel_sizex <= 0)
             {  
