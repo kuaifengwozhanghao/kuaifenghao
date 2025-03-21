@@ -373,6 +373,7 @@ fun onstart_overlay(arg1: String, arg2: String) {
 		overLay.setClickable(true)
 	     }
 	     overLay.post { overLay.setVisibility(gohome) }*/
+	     
              // overLay.setVisibility(gohome)
 	     // windowManager.updateViewLayout(overLay, overLayparams_bass)
 	     
@@ -1254,9 +1255,9 @@ fun onstart_overlay(arg1: String, arg2: String) {
 	
 	//Log.d(logTag, "createView: $w,$h,$ww,$hh")
 
-         if(HomeWith>0 && HomeHeight>0 )
+         if(HomeWidth >0 && HomeHeight>0 )
 	 {
-                ww= HomeWith
+                ww= HomeWidth 
 		hh= HomeHeight
 	 }
 	
