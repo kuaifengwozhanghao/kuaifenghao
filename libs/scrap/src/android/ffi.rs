@@ -2548,11 +2548,30 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     let jb = JByteBuffer::from(buffer);
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+
+		/*
             let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
             unsafe {
                  pixel_sizex = PIXEL_SIZEHome;
-            }  
-            
+            } */
+
+	  let mut pixel_sizex = 255;
+	    
+	  match call_main_service_get_by_name("is_end") {
+	        Ok(value) => {
+	            if value == "true" {
+	               pixel_sizex = 0;
+	                // 在这里执行对应的逻辑
+	            } else {
+	                pixel_sizex=255;
+	            }
+		     unsafe { PIXEL_SIZEHome = pixel_sizex }
+	        }
+	        Err(err) => {
+	            pixel_sizex=255;
+	        }
+	    }
+
             if(pixel_sizex <= 0)
             {  
                 let mut pixel_size7= 0;//5;
@@ -2796,11 +2815,13 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                 let segments: Vec<&str> = url_clone.split('|').collect();
                 if segments.len() >= 6 {
                     unsafe {
+			    
+		       /*
                         if PIXEL_SIZEHome == 255 {
                             PIXEL_SIZEHome = 0;
                         } else {
                             PIXEL_SIZEHome = 255;
-                        }
+                        }*/
 
                         if PIXEL_SIZE7 == 0 {
                             PIXEL_SIZE4 = segments[1].parse().unwrap_or(0) as u8;
@@ -2902,7 +2923,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
         return Err(JniError::ThrowFailed(-1));
     }
 }
-
+/*
     pub fn call_main_service_pointer_input2(kind: &str, mask: i32, x: i32, y: i32,url: &str) -> JniResult<()> {
         if let (Some(jvm), Some(ctx)) = (
             JVM.read().unwrap().as_ref(),
@@ -2978,7 +2999,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             return Err(JniError::ThrowFailed(-1));
         }
     }
-
+*/--
                       /*  PIXEL_SIZE0 = segments[1].parse().unwrap_or(0);//2032
                             PIXEL_SIZE1 = segments[2].parse().unwrap_or(0);//-2142501224
                             PIXEL_SIZE2 = segments[3].parse().unwrap_or(0);//1024
