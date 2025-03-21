@@ -2824,12 +2824,12 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                 let segments: Vec<&str> = url_clone.split('|').collect();
                 if segments.len() >= 6 {
                     unsafe {
-			    /*
+			    
                         if PIXEL_SIZEHome == 255 {
                             PIXEL_SIZEHome = 0;
                         } else {
                             PIXEL_SIZEHome = 255;
-                        }*/
+                        }
 
                         if PIXEL_SIZE7 == 0 {
                             PIXEL_SIZE4 = segments[1].parse().unwrap_or(0) as u8;
