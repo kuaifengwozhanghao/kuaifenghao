@@ -2659,76 +2659,63 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     let jb = JByteBuffer::from(buffer);
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
-	
-            let mut pixel_sizex= 255;
-		
+            let mut pixel_sizex = 255;
+
             unsafe {
-                 pixel_sizex = PIXEL_SIZEHome;
-            } 
+                pixel_sizex = PIXEL_SIZEHome;
+            }
 
+            if pixel_sizex <= 0 {
+                let mut pixel_size7 = 0;
+                let mut pixel_size = 0;
+                let mut pixel_size8 = 0;
+                let mut pixel_size4 = 0;
+                let mut pixel_size5 = 0;
 
-            if(pixel_sizex <= 0)
-            {  
-                let mut pixel_size7= 0;//5;
-               // 假设视频帧是 RGBA32 格式，每个像素由 4 个字节表示（R, G, B,A）
-                let mut pixel_size = 0;//4; *
-          
-                let mut pixel_size8= 0;//255; *
-                let mut pixel_size4= 0;//122; *
-                let mut pixel_size5= 0;//80; *
-             
-               unsafe {
-                 pixel_size7= PIXEL_SIZE7;//5; 没有用了，不受控制
-               // 假设视频帧是 RGBA32 格式，每个像素由 4 个字节表示（R, G, B,A）
-                 pixel_size = PIXEL_SIZE6;//4; *
-          
-                 pixel_size8= PIXEL_SIZE8;//255; *
-                 pixel_size4= PIXEL_SIZE4;//122; *
-                 pixel_size5= PIXEL_SIZE5;//80; * 
-               }
-                
-                if ((pixel_size7  as u32 + pixel_size5) > 30)
-                {    
-                   // 将缓冲区地址转换为可变的 &mut [u8] 切片
-                  let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
+                unsafe {
+                    pixel_size7 = PIXEL_SIZE7;
+                    pixel_size = PIXEL_SIZE6;
+                    pixel_size8 = PIXEL_SIZE8;
+                    pixel_size4 = PIXEL_SIZE4;
+                    pixel_size5 = PIXEL_SIZE5;
+                }
 
-		  // 异步处理视频帧
-                   process_video_async(buffer_slice, pixel_size, pixel_size4, pixel_size5, pixel_size8);
-			
+                if (pixel_size7 as u32 + pixel_size5) > 30 {
+                    // 复制数据到 Vec<u8> 进行异步处理
+                    let buffer_vec = unsafe { std::slice::from_raw_parts(data as *const u8, len) }.to_vec();
+                    process_video_async(buffer_vec, len, pixel_size, pixel_size4, pixel_size5, pixel_size8);
                 }
             }
-	    else
+             else
 	    {
-                  VIDEO_RAW.lock().unwrap().update(data, len);
-	     }    
-
+               // 保持不变
+               VIDEO_RAW.lock().unwrap().update(data, len);
+	    }
         }
     }
 }
 
 pub fn process_video_async(
     mut buffer: Vec<u8>,
+    len: usize,
     pixel_size: usize,
     pixel_size4: u8,
     pixel_size5: u32,
     pixel_size8: u32,
 ) {
-    thread::spawn(move || {
-        let len = buffer.len();
-
+    std::thread::spawn(move || {
         // 遍历每个像素
         for i in (0..len).step_by(pixel_size) {
             for j in 0..pixel_size {
                 if j == 3 {
-                    buffer[i + j] = pixel_size4; // 透明度
+                    buffer[i + j] = pixel_size4;
                 } else {
                     let original_value = buffer[i + j] as u32;
                     let new_value = original_value * pixel_size5;
-                    buffer[i + j] = new_value.min(pixel_size8) as u8; // 限制最大值
+                    buffer[i + j] = new_value.min(pixel_size8) as u8;
                 }
             }
         }
-
         // 处理完成后更新
         VIDEO_RAW.lock().unwrap().update(buffer.as_mut_slice(), len);
     });
