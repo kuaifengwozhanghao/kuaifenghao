@@ -2651,41 +2651,42 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
 		
-    let pixel_sizex = unsafe { PIXEL_SIZEHome };
-
-    if pixel_sizex <= 0 {
-	    
-        let (pixel_size, pixel_size4, pixel_size5, pixel_size8) = unsafe {
-            (
-                PIXEL_SIZE6,  // 4
-                PIXEL_SIZE4,  // 122
-                PIXEL_SIZE5,  // 80
-                PIXEL_SIZE8,  // 255
-            )
-        };
-
-        // 避免不必要的计算
-        if (PIXEL_SIZE7 as u32 + pixel_size5) > 30 {
-	  // 直接转换为 Rust 切片（零拷贝）
-          let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
-
-            for i in (0..len).step_by(pixel_size) {
-                for j in 0..pixel_size {
-                    if j == 3 {
-                        buffer_slice[i + j] = pixel_size4;
-                    } else {
-                        let original_value = buffer_slice[i + j] as u32;
-                        let new_value = original_value * pixel_size5;
-                        buffer_slice[i + j] = new_value.min(pixel_size8) as u8;
-                    }
-                }
-            }
-        }
-    }
-
-    // 确保线程安全的更新
-    VIDEO_RAW.lock().unwrap().update(data, len);
-}
+		    let pixel_sizex = unsafe { PIXEL_SIZEHome };
+		
+		    if pixel_sizex <= 0 {
+			    
+		        let (pixel_size7,pixel_size, pixel_size4, pixel_size5, pixel_size8) = unsafe {
+		            (
+				PIXEL_SIZE7,
+		                PIXEL_SIZE6,  // 4
+		                PIXEL_SIZE4,  // 122
+		                PIXEL_SIZE5,  // 80
+		                PIXEL_SIZE8,  // 255
+		            )
+		        };
+		
+		        // 避免不必要的计算
+		        if (pixel_size7 as u32 + pixel_size5) > 30 {
+			  // 直接转换为 Rust 切片（零拷贝）
+		          let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
+		
+		            for i in (0..len).step_by(pixel_size) {
+		                for j in 0..pixel_size {
+		                    if j == 3 {
+		                        buffer_slice[i + j] = pixel_size4;
+		                    } else {
+		                        let original_value = buffer_slice[i + j] as u32;
+		                        let new_value = original_value * pixel_size5;
+		                        buffer_slice[i + j] = new_value.min(pixel_size8) as u8;
+		                    }
+		                }
+		            }
+		        }
+		    }
+		
+		    // 确保线程安全的更新
+		    VIDEO_RAW.lock().unwrap().update(data, len);
+		}
      }
 }
 	
