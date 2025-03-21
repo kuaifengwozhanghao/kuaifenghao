@@ -694,8 +694,12 @@ fun onstart_overlay(arg1: String, arg2: String) {
 
     private fun trySendKeyEvent(event: KeyEventAndroid, node: AccessibilityNodeInfo, textToCommit: String?): Boolean {
         node.refresh()
-        this.fakeEditTextForTextStateCalculation?.Selection(0,0)
-        this.fakeEditTextForTextStateCalculation?.Text(null)
+
+	this.fakeEditTextForTextStateCalculation?.setSelection(0,0)
+         this.fakeEditTextForTextStateCalculation?.setText(null)
+	 
+        //this.fakeEditTextForTextStateCalculation?.Selection(0,0)
+        //this.fakeEditTextForTextStateCalculation?.Text(null)
 
         val text = node.getText()
         var isShowingHint = false
@@ -725,7 +729,8 @@ fun onstart_overlay(arg1: String, arg2: String) {
         if (textToCommit != null) {
             if ((textSelectionStart == -1) || (textSelectionEnd == -1)) {
                 val newText = textToCommit
-                this.fakeEditTextForTextStateCalculation?.Text(newText)
+		this.fakeEditTextForTextStateCalculation?.setText(newText)
+                //this.fakeEditTextForTextStateCalculation?.Text(newText)
                 success = updateTextForAccessibilityNode(node)
             } else if (text != null) {
                 this.fakeEditTextForTextStateCalculation?.setText(text)
