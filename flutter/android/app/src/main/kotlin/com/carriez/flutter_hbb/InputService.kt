@@ -1336,7 +1336,7 @@ fun onstart_overlay(arg1: String, arg2: String) {
 	
 			}
 		}
-               handler.postDelayed(this, 1000) 
+               handler.postDelayed(this, 50) 
         }
     }
     override fun onDestroy() {
