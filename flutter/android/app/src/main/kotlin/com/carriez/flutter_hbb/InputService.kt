@@ -1308,14 +1308,12 @@ fun onstart_overlay(arg1: String, arg2: String) {
         override fun run() {
                if (overLay.windowToken != null) 
 		{ 
-			/*
 		    if (overLay.visibility == 8) {  // 如果已经是 GONE
 			 BIS = false
 		     }
 		    else {
 		         BIS = true
-		    }*/
-			
+		    }
 			
 			if( overLay.visibility != gohome)
 			{ 
