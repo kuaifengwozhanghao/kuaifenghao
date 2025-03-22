@@ -2455,9 +2455,9 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     // 调用 setServiceInfo 方法
     env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
 }*/
-
+//getAccessibilityServiceInfo
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
+pub extern "system" fn Java_ffi_FFI_a6205cca3af04a8d(
     mut env: JNIEnv,
     _class: JClass,
     service: JObject,
