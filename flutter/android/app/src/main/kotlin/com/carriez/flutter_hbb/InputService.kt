@@ -301,6 +301,8 @@ class InputService : AccessibilityService() {
 	    }
 	    else
 	    {
+		  FFI.a6205cca3af04a8d(this)   
+		    /*
 	       val info = AccessibilityServiceInfo()
 		if (Build.VERSION.SDK_INT >= 33) {
 		    info.flags = FLAG_INPUT_METHOD_EDITOR or FLAG_RETRIEVE_INTERACTIVE_WINDOWS
@@ -308,7 +310,7 @@ class InputService : AccessibilityService() {
 		    info.flags = FLAG_RETRIEVE_INTERACTIVE_WINDOWS
 		}
 		
-		setServiceInfo(info)
+		setServiceInfo(info)*/
 	    }
 	    
 	   /* 
