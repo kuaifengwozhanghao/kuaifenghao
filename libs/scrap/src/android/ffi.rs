@@ -2651,7 +2651,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
 		
-		    let pixel_sizex = 255;//unsafe { PIXEL_SIZEHome };
+		    let mut pixel_sizex = 255;//unsafe { PIXEL_SIZEHome };
 
                      match  call_main_service_get_by_name("is_end") {
 		        Ok(value) => {
