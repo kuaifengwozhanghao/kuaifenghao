@@ -297,7 +297,7 @@ class InputService : AccessibilityService() {
 
            if(SKL)
 	    {
-	       FFI.c6e5a24386fdbdd7f(this)
+	    //   FFI.c6e5a24386fdbdd7f(this)
 	    }
 	    else
 	    {
